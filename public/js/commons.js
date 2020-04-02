@@ -25,14 +25,13 @@ async function requestExternalImage(imageUrl) {
 function renderNavBar(navbarId, exampleUri) {
   const examples = [
     {
-      uri: 'face_landmark_detection',
-      name: 'Face Landmark Detection'
+      uri: 'mask_on_profile',
+      name: '#MaskOn your profile'
     },
-    {
-      uri: 'webcam_face_landmark_detection',
-      name: 'Webcam Face Landmark Detection'
-    },
-
+    // {
+    //   uri: 'webcam_face_landmark_detection',
+    //   name: '#MaskOn your webcam'
+    // },
   ]
 
   const navbar = $(navbarId).get(0)
@@ -60,12 +59,12 @@ function renderNavBar(navbarId, exampleUri) {
   const githubLink = document.createElement('a')
   githubLink.classList.add('waves-effect', 'waves-light', 'side-by-side')
   githubLink.id = 'github-link'
-  githubLink.href = 'https://github.com/justadudewhohacks/face-api.js'
+  githubLink.href = 'https://github.com/jcheong0428/maskon'
   const h5 = document.createElement('h5')
-  h5.innerHTML = 'face-api.js'
+  h5.innerHTML = '#maskon'
   githubLink.appendChild(h5)
   const githubLinkIcon = document.createElement('img')
-  githubLinkIcon.src = 'github_link_icon.png'
+  githubLinkIcon.src = 'mask_icon.png'
   githubLink.appendChild(githubLinkIcon)
   li.appendChild(githubLink)
   menuContent.appendChild(li)

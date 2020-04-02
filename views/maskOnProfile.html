@@ -31,14 +31,14 @@
 
     <div class="row side-by-side">
       <!-- image_selection_control -->
-      <div id="selectList"></div>
+      <div id="selectList" style='visibility: hidden;'></div>
       <div class="row">
         <label for="imgUrlInput">Get image from URL:</label>
         <input id="imgUrlInput" type="text" class="bold">
       </div>
       <button
         class="waves-effect waves-light btn"
-        onclick="loadImageFromUrl()"
+        onclick="loadImageFromUrl(); clearmask();"
       >
         Ok
       </button>
@@ -75,13 +75,13 @@
         </div>
         <button
           class="waves-effect waves-light btn"
-          onclick="onDecreaseMinConfidence()"
+          onclick="onDecreaseMinConfidence(); clearmask();"
         >
           <i class="material-icons left">-</i>
         </button>
         <button
           class="waves-effect waves-light btn"
-          onclick="onIncreaseMinConfidence()"
+          onclick="onIncreaseMinConfidence(); clearmask();"
         >
           <i class="material-icons left">+</i>
         </button>
@@ -198,7 +198,7 @@
     }
 
     $(document).ready(function() {
-      renderNavBar('#navbar', 'face_landmark_detection')
+      renderNavBar('#navbar', 'mask_on_profile')
       initImageSelectionControls()
       initFaceDetectionControls()
       run()

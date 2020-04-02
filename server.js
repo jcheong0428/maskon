@@ -14,8 +14,8 @@ app.use(express.static(path.join(__dirname, './images')))
 app.use(express.static(path.join(__dirname, './weights')))
 app.use(express.static(path.join(__dirname, './dist')))
 
-app.get('/', (req, res) => res.redirect('/face_landmark_detection'))
-app.get('/face_landmark_detection', (req, res) => res.sendFile(path.join(viewsDir, 'faceLandmarkDetection.html')))
+app.get('/', (req, res) => res.redirect('/mask_on_profile'))
+app.get('/mask_on_profile', (req, res) => res.sendFile(path.join(viewsDir, 'maskOnProfile.html')))
 app.get('/webcam_face_landmark_detection', (req, res) => res.sendFile(path.join(viewsDir, 'webcamFaceLandmarkDetection.html')))
 
 app.post('/fetch_external_image', async (req, res) => {

@@ -20,6 +20,14 @@
   left: 20px;
 }
 
+.left-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  align-items: left;
+  flex-wrap: wrap;
+}
+
 .center-content {
   display: flex;
   flex-direction: column;

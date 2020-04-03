@@ -3,6 +3,8 @@
 <head>
   <script src="js/face-api.js"></script>
   <script src="js/commons.js"></script>
+  <script src="js/FileSaver.js"></script>
+  <script src="js/dom-to-image.min.js"></script>
   <script src="js/faceDetectionControls.js"></script>
   <script src="js/imageSelectionControls.js"></script>
   <link rel="stylesheet" href="styles.css">
@@ -18,30 +20,39 @@
       <div class="indeterminate"></div>
     </div>
     <div style="position: relative" class="margin">
-      <div>
-        <div id="maskdiv">
-        </div>
-        <img id="inputImg" src="" style="max-width: 800px;" />
-        <canvas id="overlay" />
+      <div id="widget" style="width: 500px; height: auto;">
+        <div id="maskdiv" style="width: 500px; margin: auto;"></div>
+        <img id="inputImg" src="" style="width: 500px; height: auto;" />
       </div>
+      <!-- <canvas id="overlay" /> This used to be under inputImg-->
 
     <!-- Mask selection goes here -->
-    <img src="images/wearafuckingmask-social-no-earloops-black-border.png" id="mask" style="width:10%;">
+    <img src="images/wearafuckingmask-social-no-earloops-black-border.png" id="mask"
+    onclick="changemask('images/wearafuckingmask-social-no-earloops-black-border.png');" style="width:10%;">
+    <img src="images/wearafuckingmask-social-no-earloops-no-border.png" id="mask"
+    onclick="changemask('images/wearafuckingmask-social-no-earloops-no-border.png');" style="width:10%;">
+    <img src="images/wearafuckingmask-social-no-earloops-white-border.png" id="mask"
+    onclick="changemask('images/wearafuckingmask-social-no-earloops-white-border.png');" style="width:10%;">
+    <img src="images/afuckingmask-no-earloops-white.png" id="mask"
+    onclick="changemask('images/afuckingmask-no-earloops-white.png');" style="width:10%;">
+    <img src="images/afuckingmask-no-earloops-black.png" id="mask"
+    onclick="changemask('images/afuckingmask-no-earloops-black.png');;" style="width:10%;">
     <!-- Mask selection goes here -->
 
-    <div class="row side-by-side">
+    <div class="left-content">
+      Paste a link to your photo or upload your image to put a #maskon.
+      <p>
       <!-- image_selection_control -->
       <div id="selectList" style='visibility: hidden;'></div>
-      <div class="row">
+      <div class="row side-by-side">
         <label for="imgUrlInput">Get image from URL:</label>
         <input id="imgUrlInput" type="text" class="bold">
-      </div>
       <button
         class="waves-effect waves-light btn"
         onclick="loadImageFromUrl(); clearmask();"
-      >
-        Ok
-      </button>
+      >Ok</button>
+    </div>
+      <p>
       <input id="queryImgUploadInput" type="file" class="waves-effect btn bold" onchange="loadImageFromUpload(); clearmask();" accept=".jpg, .jpeg, .png">
       <!-- image_selection_control -->
     </div>
@@ -123,7 +134,16 @@
       </div>
     </span>
     <!-- tiny_face_detector_controls -->
+    <input type="button" id="btnSave" class="waves-effect waves-light btn" value="Save your #maskon photo" onclick="downloadmaskpic();"/>
 
+    <div id="img-out"></div>
+
+    <h3>Inspirations and references</h3>
+    <ul style="list-style-type:disc;">
+      <li>#WearAF—ingMask: https://wearafuckingmask.com/</li>
+      <li>face-api.js: https://github.com/justadudewhohacks/face-api.js/</li>
+      <li>spooky masks: https://github.com/jlengstorf/spooky-masks-facial-recognition</li>
+    </ul>
   </body>
 
   <script>
@@ -239,6 +259,36 @@
       myNode.removeChild(myNode.lastElementChild);
     }
   };
+
+  function changemask(new_img_src) {
+    const myNode = document.getElementById("maskdiv").children;
+    for (var i = 0; i < myNode.length; i++) {
+      var tableChild = myNode[i];
+      // Do stuff
+      tableChild.src = new_img_src;
+    };
+  };
+
+  function sleep(milliseconds) {
+    const date = Date.now();
+    let currentDate = null;
+    do {
+      currentDate = Date.now();
+    } while (currentDate - date < milliseconds);
+  }
+
+  function downloadmaskpic() {
+    domtoimage.toJpeg(document.getElementById('widget'), { quality: 0.95 })
+        .then(function (dataUrl) {
+            var link = document.createElement('a');
+            sleep(3000);
+            link.download = 'mask-on-profile.jpeg';
+            link.href = dataUrl;
+            link.click();
+        });
+  };
+
   </script>
+
 </body>
 </html>

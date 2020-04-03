@@ -4,8 +4,6 @@
   <script src="js/face-api.js"></script>
   <script src="js/commons.js"></script>
   <script src="js/FileSaver.js"></script>
-  <script src="js/Blob.js"></script>
-  <script src="js/canvas-toBlob.js"></script>
   <script src="js/dom-to-image.min.js"></script>
   <script src="js/faceDetectionControls.js"></script>
   <script src="js/imageSelectionControls.js"></script>
@@ -16,7 +14,7 @@
 </head>
 <body>
   <div id="navbar"></div>
-  <div class="center-content page-container">
+  <div class="left-content page-container">
 
     <div class="progress" id="loader">
       <div class="indeterminate"></div>
@@ -43,21 +41,24 @@
 
     <div class="left-content">
       Paste a link to your photo or upload your image to put a #maskon.
+      Choose from different masks.
       <p>
       <!-- image_selection_control -->
-      <div id="selectList" style='visibility: hidden;'></div>
-      <div class="row side-by-side">
+      <div class="row side-by-side" style="margin-left:0;">
         <label for="imgUrlInput">Get image from URL:</label>
         <input id="imgUrlInput" type="text" class="bold">
       <button
         class="waves-effect waves-light btn"
         onclick="loadImageFromUrl(); clearmask();"
       >Ok</button>
+      <div id="selectList" style='visibility: hidden;'></div>
     </div>
       <p>
       <input id="queryImgUploadInput" type="file" class="waves-effect btn bold" onchange="loadImageFromUpload(); clearmask();" accept=".jpg, .jpeg, .png">
       <!-- image_selection_control -->
     </div>
+    <p>
+    <input type="button" id="btnSave" class="waves-effect waves-light btn" value="Save your #maskon photo" onclick="downloadmaskpic();"/>
 
     <div class="row side-by-side" style="visibility: hidden;">
       <!-- face_detector_selection_control -->
@@ -76,11 +77,11 @@
         <label for="hideBoundingBoxesCheckbox">Hide Bounding Boxes</label>
       </div>
       <!-- check boxes -->
-
     </div>
 
+
     <!-- ssd_mobilenetv1_controls -->
-    <span id="ssd_mobilenetv1_controls" style="visibility: visible;">
+    <span id="ssd_mobilenetv1_controls" style="visibility: hidden;">
       <div class="row side-by-side">
         <div class="row">
           <label for="minConfidence">Min Confidence:</label>
@@ -136,16 +137,16 @@
       </div>
     </span>
     <!-- tiny_face_detector_controls -->
-    <input type="button" id="btnSave" class="waves-effect waves-light btn" value="Save your #maskon photo" onclick="downloadmaskpic();"/>
 
     <div id="img-out"></div>
-
-    <h3>Inspirations and references</h3>
-    <ul style="list-style-type:disc;">
-      <li>#WearAF—ingMask: https://wearafuckingmask.com/</li>
-      <li>face-api.js: https://github.com/justadudewhohacks/face-api.js/</li>
-      <li>spooky masks: https://github.com/jlengstorf/spooky-masks-facial-recognition</li>
-    </ul>
+    <div class="left-content">
+      <h3>Inspirations and references</h3>
+      <ul style="list-style-type:disc;">
+        <li>#WearAF—ingMask: https://wearafuckingmask.com/</li>
+        <li>face-api.js: https://github.com/justadudewhohacks/face-api.js/</li>
+        <li>spooky masks: https://github.com/jlengstorf/spooky-masks-facial-recognition</li>
+      </ul>
+    </div>
   </body>
 
   <script>
@@ -165,40 +166,42 @@
       const scale = inputImgEl.width / inputImgEl.naturalWidth
       const options = getFaceDetectorOptions()
 
-      const results = await faceapi.detectAllFaces(inputImgEl, options).withFaceLandmarks()
-      // const detection = await faceapi
-      //   .detectSingleFace(inputImgEl, new faceapi.TinyFaceDetectorOptions())
-      //   .withFaceLandmarks(true)
-      console.log(results)
-      for (let i in results) {
-        const overlayValues = getOverlayValues(results[i])
-        console.log(overlayValues)
-        // load mask
-        const maskoverlay = document.createElement("img")
-        maskoverlay.src = document.getElementById("mask").src
-        // maskoverlay.src = "images/afuckingmask-no-earloops-white.png"
-        maskoverlay.id = "maskon"
-        maskoverlay.class = "maskon"
-        maskoverlay.style.cssText = `
-          position: absolute;
-          left: ${overlayValues.leftOffset * scale}px;
-          top: ${overlayValues.topOffset * scale}px;
-          width: ${overlayValues.width * scale}px;
-          transform: rotate(${overlayValues.angle}deg);
-        `
-        // if (document.getElementById("maskon")) {
-        //   document.getElementById("maskon").remove()
-        // }
-        var item = document.getElementById("maskdiv");
-        item.appendChild(maskoverlay)
+      // Attempt to add handleImage
+      const handleImage = (oldImage, newImage) => async () => {
+        const results = await faceapi.detectAllFaces(newImage, options).withFaceLandmarks()
+        // const detection = await faceapi
+        //   .detectSingleFace(inputImgEl, new faceapi.TinyFaceDetectorOptions())
+        //   .withFaceLandmarks(true)
+        // console.log(results)
+        for (let i in results) {
+          const overlayValues = getOverlayValues(results[i])
+          // console.log(overlayValues)
+          // load mask
+          const maskoverlay = document.createElement("img")
+          maskoverlay.src = document.getElementById("mask").src
+          maskoverlay.id = "maskon"
+          maskoverlay.class = "maskon"
+          maskoverlay.style.cssText = `
+            position: absolute;
+            left: ${overlayValues.leftOffset * scale}px;
+            top: ${overlayValues.topOffset * scale}px;
+            width: ${overlayValues.width * scale}px;
+            transform: rotate(${overlayValues.angle}deg);
+          `
+          // if (document.getElementById("maskon")) {
+          //   document.getElementById("maskon").remove()
+          // }
+          var item = document.getElementById("maskdiv");
+          item.appendChild(maskoverlay)
+        }
       }
 
-      // const image = new Image()
-      // image.crossOrigin = "Anonymous"
-      // image.addEventListener("load", handleImage(originalImage, image))
-      // image.src = originalImage.src
+      const image = new Image();
+      image.crossOrigin = "Anonymous";
+      image.addEventListener("load", handleImage(inputImgEl, image));
+      image.src = inputImgEl.src;
 
-      // const canvas = $('#overlay').get(0)
+      // const canvas = $('#widget').get(0)
       // faceapi.matchDimensions(canvas, inputImgEl)
       // const resizedResults = faceapi.resizeResults(results, inputImgEl)
       //
@@ -283,7 +286,6 @@
     domtoimage.toJpeg(document.getElementById('widget'), { quality: 0.95 })
         .then(function (dataUrl) {
             var link = document.createElement('a');
-            sleep(3000);
             link.download = 'mask-on-profile.jpeg';
             link.href = dataUrl;
             link.click();

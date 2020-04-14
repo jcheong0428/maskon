@@ -90,3 +90,7 @@ input[type="file"]::-webkit-file-upload-button {
     color: #fff;
     border-radius: .2em;
 }
+
+li:not(:last-child) {
+    margin-bottom: 5px;
+}

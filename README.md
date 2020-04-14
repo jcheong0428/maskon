@@ -9,3 +9,4 @@ Application is available at https://maskonme.herokuapp.com
 face-api.js: https://github.com/justadudewhohacks/face-api.js/    
 spooky masks: https://github.com/jlengstorf/spooky-masks-facial-recognition  
 #wearafuckingmask: https://wearafuckingmask.com  
+DIYmaskchallenge: https://diymaskchallenge.org
